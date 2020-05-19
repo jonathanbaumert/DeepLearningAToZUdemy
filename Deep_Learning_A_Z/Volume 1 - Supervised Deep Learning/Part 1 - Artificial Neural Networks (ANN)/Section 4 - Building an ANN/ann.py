@@ -71,7 +71,7 @@ classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', \
                    metrics = ['accuracy'])# use stochastic gradient descent using adam
     
 # fit the ANN to the Training Set
-classifier.fit(X_train, Y_train, batch_size = 20, epochs = 500)
+classifier.fit(X_train, Y_train, batch_size = 50, epochs = 100)
 
 # Predicting the test set results
 y_pred = classifier.predict(X_test)
@@ -102,3 +102,29 @@ if newCustomerPrediction:
     print('This new customer is predicted to leave the bank')
 else:
     print('This new customer is predicted to stay with the bank')
+
+
+# Improve and Tune the ANN using K-Fold Cross Validation
+from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import cross_val_score
+
+def build_classifier():
+    # initializing the Artificial Neural Network (ANN)
+    classifier = Sequential()
+    
+    # Adding the input and first hidden layer
+    classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+    
+    # add the second hidden layer
+    classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+    
+    # add the output layer
+    classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
+    
+    # compiling the ANN
+    classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])# use stochastic gradient descent using adam
+    
+    return classifier
+
+kFoldClassifier = KerasClassifier(build_fn = build_classifier, batch_size = 10, epochs = 100)
+accuracies = cross_val_score(estimator = kFoldClassifier, X = X_train, y = Y_train, cv = 10, n_jobs = -1)
