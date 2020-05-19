@@ -49,5 +49,12 @@ X_test = sc.transform(X_test)
 labelencoder_y = LabelEncoder()
 y = labelencoder_y.fit_transform(Y)
 
+# import the Keras Libraries and packages
+
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+
+
 
 
