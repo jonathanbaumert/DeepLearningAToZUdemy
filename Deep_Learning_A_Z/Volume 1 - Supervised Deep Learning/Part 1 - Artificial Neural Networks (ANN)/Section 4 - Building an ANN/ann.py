@@ -50,11 +50,12 @@ labelencoder_y = LabelEncoder()
 y = labelencoder_y.fit_transform(Y)
 
 # import the Keras Libraries and packages
-
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
 
+# initializing the Artificial Neural Network (ANN)
+classifier = Sequential()
 
-
-
+# Adding the input and hidden layers
+classifier.add(Dense(units = 6, init = 'uniform', kernel_initializer = 'relu', input_dim = 11))
