@@ -57,5 +57,48 @@ from keras.layers import Dense
 # initializing the Artificial Neural Network (ANN)
 classifier = Sequential()
 
-# Adding the input and hidden layers
-classifier.add(Dense(units = 6, init = 'uniform', kernel_initializer = 'relu', input_dim = 11))
+# Adding the input and first hidden layer
+classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+
+# add the second hidden layer
+classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+
+# add the output layer
+classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
+
+# compiling the ANN
+classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', \
+                   metrics = ['accuracy'])# use stochastic gradient descent using adam
+    
+# fit the ANN to the Training Set
+classifier.fit(X_train, Y_train, batch_size = 20, epochs = 500)
+
+# Predicting the test set results
+y_pred = classifier.predict(X_test)
+y_pred = (y_pred > 0.5)
+
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(Y_test, y_pred)
+
+# display accuracy
+accuracy = (cm[0,0] + cm[1,1]) / sum(sum(cm)) * 100
+print(f'This method resulted in an accuracy of {accuracy}%')
+
+# predict if a new customer will leave
+# Geography : France
+# Credit Score: 600
+# Gender : Male
+# Age : 40
+# Tenure : 3
+# Balance : 60000
+# # of Products : 2
+# Active Credit Card : Yes
+# Active member : Yes
+# Estimated Salary : 50000
+newCustomer = sc.transform(np.array([[0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]]))
+newCustomerPrediction = classifier.predict(newCustomer)
+newCustomerPrediction = (newCustomerPrediction > 0.5)
+if newCustomerPrediction:
+    print('This new customer is predicted to leave the bank')
+else:
+    print('This new customer is predicted to stay with the bank')
